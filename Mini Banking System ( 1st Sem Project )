@@ -24,7 +24,7 @@ void withdraw ();
 void update ();
 void del ();
 
-int main ()
+int main () 
 {
 	int choice;
 	
