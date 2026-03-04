@@ -1,0 +1,103 @@
+#include
+#include
+using namespace std;
+
+class Library {
+protected:
+string title;
+string author;
+int id;
+
+public:
+Library(string title, string author, int id) {
+this->title = title;
+this->author = author;
+this->id = id;
+}
+
+void display() {
+    cout << "Title : " << title << endl;
+    cout << "Author : " << author << endl;
+    cout << "Unique ID Number : " << id << endl;
+}
+};
+
+class Book : public Library {
+int pages;
+string genre;
+
+public:
+Book(int pages, string genre, string title, string author, int id)
+: Library(title, author, id) {
+this->pages = pages;
+this->genre = genre;
+}
+
+void display() {
+    Library::display();
+    cout << "Number of Pages : " << pages << endl;
+    cout << "Genre : " << genre << endl;
+    cout << "------------------------" << endl;
+}
+};
+
+class Magazine : public Library {
+int issueNum;
+string publicationMonth;
+
+public:
+Magazine(int issueNum, string publicationMonth,
+string title, string author, int id)
+: Library(title, author, id) {
+this->issueNum = issueNum;
+this->publicationMonth = publicationMonth;
+}
+
+void display() {
+    Library::display();
+    cout << "Issue Number : " << issueNum << endl;
+    cout << "Month of Publication : " << publicationMonth << endl;
+    cout << "------------------------" << endl;
+}
+};
+
+class AudioBook : public Library {
+int duration;
+string narratorname;
+
+public:
+AudioBook(int duration, string narratorname,
+string title, string author, int id)
+: Library(title, author, id) {
+this->duration = duration;
+this->narratorname = narratorname;
+}
+
+void display() {
+    Library::display();
+    cout << "Duration : " << duration << endl;
+    cout << "Narrator Name : " << narratorname << endl;
+    cout << "------------------------" << endl;
+}
+};
+
+int main() {
+
+Book b1(200, "Programming", "C++", "Joseph", 23065);
+Book b2(230, "Programming", "Java", "Christian", 23655);
+
+Magazine m1(12, "January", "Tech Monthly", "Ali", 45012);
+Magazine m2(15, "February", "Science World", "Ahmed", 45013);
+
+AudioBook a1(90, "John Smith", "Learn OOP", "David", 78945);
+AudioBook a2(120, "Sara Khan", "Data Structures", "Michael", 78946);
+
+b1.display();
+b2.display();
+m1.display();
+m2.display();
+a1.display();
+a2.display();
+
+return 0;
+}
