@@ -1,0 +1,639 @@
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+class Person {
+	protected:
+		string name;
+		int age;
+		string gender;
+		
+	public:
+	Person (){}
+	
+	void setName (string n){
+		name=n;
+	}
+	
+	void setAge (int a){
+		age=a;
+	}
+	
+	void setGender (string g){
+		gender=g;
+	}
+	
+	void showInfo (){
+		cout << "Name : " << name << endl;
+		cout << "Age : " << age << endl;
+		cout << "Gender : " << gender << endl;
+	}
+};
+
+class Patient : public Person 
+{
+	private:
+		string disease;
+		string id;
+		
+	public:
+		Patient (){}
+		
+		void setDisease (string d){
+			disease=d;
+		}
+		
+		void setID (string i){
+			id=i;
+		}
+		
+	void show(){
+		showInfo();
+		cout << "Disease : " << disease << endl;
+		cout << "Patient ID : " << id << endl;
+	}
+	
+	void showPatientInfo (string field)
+	{
+		if (field=="name" || field=="Name")
+		cout << "Name : " << name << endl;
+		else if (field=="age" || field=="Age")
+		cout << "Age : " << age << endl;
+		else if (field=="gender" || field=="Gender")
+		cout << "Gender : " << gender << endl;
+		else if (field=="disease" || field=="Disease")
+		cout << "Disease : " << disease << endl;
+		else if (field=="id" || field=="ID")
+		cout << "Patient ID : " << id << endl;
+		else
+		cout << "Field not found\n";
+	}
+	
+	bool operator==(Patient p){
+		return this->id == p.id;
+	}
+	
+	string getID (){
+		return id;
+	}
+};
+
+class Doctor : public Person {
+	private:
+		string specialization;
+		string docID;
+		int fee;
+		string timings;
+		
+	public:
+		Doctor (string n , int a , string g , string s , string d , int f , string t){
+			setName(n);
+			setAge(a);
+			setGender(g);
+			specialization=s;
+			docID=d;
+			fee=f;
+			timings=t;
+		}
+		
+		void show (){
+			showInfo();
+			cout << "Specialization : " << specialization << endl;
+			cout << "Dr ID : " << docID << endl;
+			cout << "Fee : " << fee << endl;
+			cout << "Time Schedule : " << timings << endl;
+		}
+		
+		bool operator==(Doctor d){
+			return this->docID == d.docID;
+		}
+	
+	string getDocId (){
+		return docID;
+	}
+};
+
+class Appointment {
+	private:
+		string patientId , docID , date , time;
+		
+	public:
+		Appointment (){}
+		
+		Appointment (string p,string d , string d1 , string t){
+			patientId=p;
+			docID=d;
+			date=d1;
+			time=t;
+		}
+	
+	string getPatientID (){
+		return patientId;
+	}
+	
+	void show (){
+		cout << "Patient ID : " << patientId << endl;
+		cout << "Doctor ID : " << docID << endl;
+		cout << "Date : " << date << endl;
+		cout << "Time : " << time << endl;
+	}
+};
+
+class Bill {
+	private:
+		string patientID;
+		double docFee , other_charges;
+		
+	public:
+		Bill (){}
+		
+		Bill (string p , double d , double c){
+			patientID=p;
+			docFee=d;
+			other_charges=c;
+		}
+		
+	double calculateBill (){
+		return docFee + other_charges;
+	}
+	
+	void showBill (){
+		cout << "Patient ID : " << patientID << endl;
+		cout << "Doctor Fee : " << docFee << endl;
+		cout << "Other Charges : " << other_charges << endl;
+		cout << "Total Bill : " << calculateBill() << endl;
+	}
+};
+
+class HospitalSystem {
+	private:
+		vector <Patient> patients;
+		vector <Doctor> doctors;
+		vector <Appointment> appointments;
+		vector <Bill> bills;
+		
+	public:
+		
+	void registerPatient (string id , string name , int age , string gender , string disease)
+	{
+		for (int i=0; i<patients.size(); i++){
+			if (patients[i].getID()==id){
+				cout << "A patient with this ID already exists\n";
+				return;
+			}
+		}
+		
+		Patient p;
+		p.setName(name);
+		p.setAge(age);
+		p.setGender(gender);
+		p.setDisease(disease);
+		p.setID(id);
+		
+		patients.push_back(p);
+		cout << "Patient registered successfully\n";
+	}
+	
+	void addDoctors (string id , string name , int age , string gender , string specialization , int fee , string time)
+	{
+		for (int i=0; i<doctors.size(); i++){
+			if (doctors[i].getDocId()==id){
+				cout << "Doctor with this ID already exists\n";
+				return;
+			}
+		}
+		
+		doctors.push_back(Doctor(name,age,gender,specialization,id,fee,time));
+	}
+	
+	void createAppointment(string pid , string did , string date , string time)
+	{
+		for (int i=0; i<appointments.size(); i++){
+			if (appointments[i].getPatientID()==pid){
+				cout << "This patient has already booked an appointment\n";
+				return;
+			}
+		}
+		
+		appointments.push_back(Appointment(pid,did,date,time));
+		cout << "Appointment created successfully\n";
+	}
+	
+	void createBill (string pid , double fee , double charges)
+	{
+		bills.push_back(Bill(pid,fee,charges));
+		cout << "Bill generated successfully\n";
+	}
+	
+	void patientSearch (string id)
+	{
+		for (int i=0; i<patients.size(); i++){
+			if (patients[i].getID()==id){
+				cout << "Patient Record Found\n";
+				patients[i].show();
+				return;
+			}
+		}
+		cout << "Patient Not Found\n";
+	}
+	
+	void patientSearch (string id , string field)
+	{
+		for (int i=0; i<patients.size(); i++){
+			if (patients[i].getID()==id){
+				patients[i].showPatientInfo(field);
+				return;
+			}
+		}
+		cout << "Patient Not Found\n";
+	}
+	
+	void updatePatient (string id)
+	{
+		string name,disease;
+		int age;
+		
+		for (int i=0; i<patients.size(); i++){
+			if (patients[i].getID()==id){
+				
+				int choice;
+				cout << "1. Name\n2. Age\n3. Disease\n4. All\n";
+				cin >> choice;
+				
+				if (choice==1){
+					while(true){
+						cout << "Name: ";
+						cin.ignore();
+						getline(cin,name);
+						if (name!="" && name.length() <=30) break;
+						cout << "Invalid Name\n";
+					}
+					patients[i].setName(name);
+				}
+				
+				else if (choice==2){
+					while(true){
+						cout << "Age: ";
+						cin >> age;
+						if (age>0 && age<=120) break;
+						cout << "Invalid Age\n";
+					}
+					patients[i].setAge(age);
+				}
+				
+				else if (choice==3){
+					while (true){
+						cin.ignore();
+						getline(cin,disease);
+						if (disease!="") break;
+						cout << "Disease cannot be empty\n";
+					}
+					patients[i].setDisease(disease);
+				}
+				
+				else if (choice==4){
+					
+					while(true){
+						cout << "Name: ";
+						cin.ignore();
+						getline(cin,name);
+						if (name!="" && name.length() <=30) break;
+						cout << "Invalid Name\n";
+					}
+					
+					while (true){
+						cout << "Age: ";
+						cin >> age;
+						if (age>0 && age<=120) break;
+						cout << "Invalid Age\n";
+					}
+					
+					while (true){
+						cin.ignore();
+						getline(cin,disease);
+						if (disease!="") break;
+						cout << "Disease cannot be empty\n";
+					}
+					
+					patients[i].setName(name);
+					patients[i].setAge(age);
+					patients[i].setDisease(disease);
+				}
+				
+				cout << "Updated Successfully\n";
+				return;
+			}
+		}
+		cout << "Patient Not Found\n";
+	}
+	
+	void display ()
+	{
+		cout << "---Patients---\n";
+		for (int i=0; i<patients.size(); i++){
+			patients[i].show();
+			cout << endl;
+		}
+		
+		cout << "---Doctors---\n";
+		for (int i=0; i<doctors.size(); i++){
+			doctors[i].show();
+			cout << endl;
+		}
+		
+		cout << "---Appointments---\n";
+		for (int i=0; i<appointments.size(); i++){
+			appointments[i].show();
+			cout << endl;
+		}
+		
+		cout << "---Bills---\n";
+		for (int i=0; i<bills.size(); i++){
+			bills[i].showBill();
+			cout << endl;
+		}
+	}
+};
+
+int main ()
+{
+	HospitalSystem h;
+	int choice;
+
+	h.addDoctors("D01","Dr Zubair",65,"Male","Fever",1000,"4PM - 8PM");
+	h.addDoctors("D02","Dr Ali",50,"Male","Cardiologist",3000,"5PM - 9PM");
+	h.addDoctors("D03","Dr Sara",45,"Female","Skin Specialist",2000,"2PM - 6PM");
+	h.addDoctors("D04","Dr Ahmed",55,"Male","Opthamalogist",1500,"3PM - 7PM");
+	h.addDoctors("D05","Dr Hina",40,"Female","Dental",1200,"1PM - 5PM");
+	h.addDoctors("D06","Dr Bilal",48,"Male","General Physician",900,"6PM - 10PM");
+	h.addDoctors("D07","Dr Asma",42,"Female","Orthopedic",2800,"4PM - 8PM");
+	h.addDoctors("D08","Dr Usman",60,"Male","Gynecologist",2200,"3PM - 6PM");
+	h.addDoctors("D09","Dr Noor",38,"Female","Psychiarist",1300,"10AM - 2PM");
+	h.addDoctors("D10","Dr Khan",52,"Male","Dermatalogist",1700,"2PM - 6PM");
+	
+	
+	do{
+		cout << "\n===== Sodan Hospital Management System =====\n\n";
+		cout << "1. Register Patient\n";
+		//cout << "2. Add Doctor\n"; because theres no need now
+		cout << "2. Search Patient \n";
+		cout << "3. Update Patient\n";
+		cout << "4. Create Appointment\n";
+		cout << "5. Generate Bill\n";
+		cout << "6. Display All Records\n";
+		cout << "0. Exit\n\n";
+		cout << "Enter Choice : ";
+		cin >> choice;
+		
+		switch(choice){
+			
+			case 1:
+			{
+				string id,name,gender,disease;
+				int age;
+				
+				while(true){
+				cout << "ID: ";
+				cin >> id;
+	
+				if (id != "" && id[0] != '-' && id.length() <= 10)
+				break;
+	
+				cout << "Invalid ID. Try again\n";
+				}
+				
+				while(true){
+					cout << "Name: ";
+					cin.ignore();
+					getline(cin,name);
+					if (name!="" && name.length() <=30) 
+					break;
+					cout << "Invalid Name\n";
+				}
+				
+				while(true){
+					cout << "Age: ";
+					cin >> age;
+					if (age>0 && age<=120) 
+					break;
+					cout << "Invalid Age\n";
+				}
+				
+				while(true){
+					cout << "Gender: ";
+					cin >> gender;
+					if (gender=="Male" || gender=="Female" || gender=="male" || gender=="female" || gender=="Other" || gender=="other") 
+					break;
+					cout << "Invalid Gender\n";
+				}
+				
+				while(true){
+					cout << "Disease: ";
+					cin.ignore();
+					getline(cin,disease);
+					if (disease!="") 
+					break;
+					cout << "Invalid Disease\n";
+				}
+				
+				h.registerPatient(id,name,age,gender,disease);
+				break;
+			}
+			
+			case 2:
+			{
+				string id,name,gender,spec,time;
+				int age,fee;
+				
+				while(true){
+				cout << "Doctor ID: ";
+				cin >> id;
+	
+				if (id != "" && id[0] != '-' && id.length() <= 10)
+				break;
+	
+				cout << "Invalid ID. Try again\n";
+				}
+				
+				while(true){
+				cout << "Name: ";
+				cin.ignore();
+				getline(cin,name);
+				if (name!="" && name.length() <=30) 
+				break;
+				cout << "Invalid Name\n";
+				}
+				
+				while(true){
+				cout << "Age: ";
+				cin >> age;
+				if (age>0 && age<=120) 
+				break;
+				cout << "Invalid Age\n";
+				}
+				
+				while(true){
+				cout << "Gender: ";
+				cin >> gender;
+				if (gender=="Male" || gender=="Female" || gender=="male" || gender=="female" || gender=="Other" || gender=="other") 
+				break;
+				cout << "Invalid Gender\n";
+				}
+				
+				while(true){
+				cin.ignore();
+				cout << "Specialization: "; 
+				getline(cin,spec);
+				if (spec!="" && spec.length() <=20) 
+				break;
+				cout << "Invalid Specialization\n";
+				}
+				
+				while (true){
+				cout << "Fee: "; 
+				cin >> fee;
+				if (fee>0)
+				break;
+				cout << "Invalid Fee\n";
+				}
+				
+				while (true){
+				cin.ignore();
+				cout << "Time: "; 
+				getline(cin,time);
+				if (time!="")
+				break;
+				cout << "Time cannot be empty\n";
+				}
+				
+				h.addDoctors(id,name,age,gender,spec,fee,time);
+				break;
+			}
+			
+			case 3:
+			{
+				string id,field;
+				
+				while(true){
+				cout << "ID: ";
+				cin >> id;
+	
+				if (id != "" && id[0] != '-' && id.length() <= 10)
+				break;
+				cout << "Invalid ID. Try again\n";
+				}
+				
+				while (true){
+				cout << "Field: ";
+				cin.ignore();
+				getline (cin, field);
+				if (field!="")
+				break;
+				cout << "Field cannot be empty\n";
+				}
+				
+				h.patientSearch(id,field);
+				break;
+			}
+			
+			case 4:
+			{
+				string id;
+				
+				while (true){
+				cout << "ID: ";
+				cin >> id;
+				if (id!="" && id[0]!='-' && id.length() <=10)
+				break;
+				cout << "Invalid ID. Try again\n";
+				}
+				
+				h.updatePatient(id);
+				break;
+			}
+			
+			case 5:
+			{
+				string pid,did,date,time;
+				
+				while (true){
+				cout << "Patient ID: ";
+				cin >> pid;
+				if (pid!="" && pid[0]!='-' && pid.length() <=10)
+				break;
+				cout << "Invalid ID. Try again\n";
+				}
+				
+				while(true){
+				cout << "Doctor ID: ";
+				cin >> did;
+				if (did != "" && did[0] != '-' && did.length() <= 10)
+				break;
+				cout << "Invalid ID. Try again\n";
+				}
+				
+				while (true){
+				cin.ignore();
+				cout << "Date: "; 
+				getline(cin,date);
+				if (date!="")
+				break;
+				cout << "Date cannot be empty\n";
+				}
+				
+				while (true){
+				cout << "Time: "; 
+				getline(cin,time);
+				if (time!="")
+				break;
+				cout << "Time cannot be empty\n";
+				}
+				
+				h.createAppointment(pid,did,date,time);
+				break;
+			}
+			
+			case 6:
+			{
+				string pid;
+				double fee,charges;
+				
+				while(true){
+				cout << "ID: ";
+				cin >> pid;
+	
+				if (pid != "" && pid[0] != '-' && pid.length() <= 10)
+				break;
+				cout << "Invalid ID. Try again\n";
+				}
+				
+				while (true){
+				cout << "Fee: "; 
+				cin >> fee;
+				if (fee>0)
+				break;
+				cout << "Invalid Fee\n";
+				}
+				
+				while (true){
+				cout << "Charges: "; 
+				cin >> charges;
+				if (charges>0)
+				break;
+				cout << "Invalid Charges\n";
+				}
+				
+				h.createBill(pid,fee,charges);
+				break;
+			}
+			
+			case 7:
+				h.display();
+				break;
+		}
+		
+	}while(choice!=0);
+	
+	return 0;
+}
