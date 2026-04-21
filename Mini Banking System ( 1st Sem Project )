@@ -4,7 +4,7 @@
 #include <cstdlib>
 using namespace std;
 
-struct BankingSystem 
+struct BankingSystem
 {
 	int accNum;
 	string name;
