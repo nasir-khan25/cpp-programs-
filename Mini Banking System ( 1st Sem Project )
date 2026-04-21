@@ -126,9 +126,8 @@ void create ()
 				
 				cout << "Enter Phone Number : \n";
 				cin >> user[i].ph;
-			
-			total+=choice;
 	}
+    total+=choice;
 }
 
 void show ()
@@ -142,7 +141,7 @@ void show ()
 		{
 			cout << "\nAccount Number : " << user[i].accNum;
 			cout << "\nName : " << user[i].name;
-			cout << "\nAccount PIN " << user[i].PIN;
+			cout << "\nAccount PIN ****" << user[i].PIN;
 			cout << "\nBalance : " << user[i].balance;
 			cout << "\nPhone Number : " << user[i].ph;
 		}
@@ -214,9 +213,6 @@ void deposit ()
 				{
 					cout << "Invalid Amount\n";
 				}
-				
-            	isFound = true;
-            	break;
         	}
 		}
 	}
